@@ -1,0 +1,26 @@
+﻿@page "/users/{userId:guid}/projects"
+
+@rendermode InteractiveServer
+
+<h3>Your current project:</h3>
+
+<h1>Select your existing project or create a new one</h1>
+
+@foreach (var project in Projects)
+{
+	<p>
+		<a href="/users/@userId/projects/@project.Id">@($"{project.Name}")</a>
+		<button @onclick="() => EditProject(project.Id)">Edit</button>
+	</p>
+}
+
+<p>
+	<button @onclick="@Cancel">Go to the preview page</button>
+</p>
+
+<h1>Add a new project</h1>
+<button @onclick="() => AddProject()">Add a new project</button>
+
+
+<h1>View my activities</h1>
+<button @onclick="() => UserActivities()">My activities</button>

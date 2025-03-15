@@ -1,0 +1,20 @@
+﻿@page "/users/{userId:guid}/projects/{projectId:guid}/edit"
+
+@rendermode InteractiveServer
+
+<h3>Project Edit Page</h3>
+
+<p>
+	<label>
+		Project name:
+		<InputText @bind-Value="Data.Name" />
+	</label>
+</p>
+<p>
+	<button @onclick="@SaveProject">Save</button>
+	<button @onclick="() => DeleteProject(Data.Id)">Delete project</button>
+	<button @onclick="@Cancel">Cancel</button>
+</p>
+<p>
+	Project name: @Data.Name
+</p>

@@ -1,0 +1,18 @@
+﻿@page "/users"
+
+@rendermode InteractiveServer
+
+<PageTitle>Select user</PageTitle>
+
+<h1>Select existing user or create a new one</h1>
+
+@foreach (var user in Users)
+{
+	<p><a href="/users/@user.Id">@($"{user.FirstName} {user.LastName}")</a>
+		<button @onclick="() => SelectUser(user.Id)">Select</button>
+		<button @onclick="() => DeleteUser(user.Id)">Delete</button>
+	</p>
+}
+
+<h1>Add a new user</h1>
+<button @onclick="() => AddUser()">Add a new user</button>

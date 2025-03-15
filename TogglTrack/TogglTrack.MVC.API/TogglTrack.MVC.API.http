@@ -1,0 +1,6 @@
+@TogglTrack.MVC.API_HostAddress = http://localhost:5207
+
+GET {{TogglTrack.MVC.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

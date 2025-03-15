@@ -1,0 +1,27 @@
+﻿@using TogglTrack.Common.Models.User
+@page "/users/{Id:guid}"
+
+<h3>User Edit Page</h3>
+
+@rendermode InteractiveServer
+
+<p>
+	<label>
+		First name:
+		<InputText @bind-Value="Data.FirstName" />
+	</label>
+</p>
+<p>
+	<label>
+		Last name:
+		<InputText @bind-Value="Data.LastName" />
+	</label>
+</p>
+<p>
+	<button @onclick="@Save">Save</button>
+	<button @onclick="() => DeleteUser(Data.Id)">Delete user</button>
+	<button @onclick="@Cancel">Cancel</button>
+</p>
+<p>
+	Full name: @($"{Data.FirstName} {Data.LastName}")
+</p>
