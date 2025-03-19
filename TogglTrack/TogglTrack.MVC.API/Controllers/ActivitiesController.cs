@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TogglTrack.API.Abstractions;
-using TogglTrack.BL.Facades;
 using TogglTrack.BL.Facades.Interfaces;
 using TogglTrack.Common.Models.Activity;
 
@@ -44,32 +43,21 @@ namespace TogglTrack.MVC.API.Controllers
             return await _activityFacade.GetByIdAsync(activityId);
         }
 
-        [HttpGet("{userId}/useractivities", Name = nameof(GetUserActivitiesAsync))]
-        public async Task<ActionResult<IEnumerable<ActivityListModel>>> GetUserActivitiesAsync(Guid userId, string? filter)
+        [HttpGet("{userId}/user-activities", Name = nameof(GetUserActivitiesAsync))]
+        public async Task<IEnumerable<ActivityListModel>> GetUserActivitiesAsync(Guid userId, string? filter)
         {
-            try
+            return await _activityFacade.GetUserActivitiesByFilterAsync(userId, filter);
+        }
+
+        [HttpGet("{userId}/user-active-activity", Name = nameof(GetUserActiveActivityAsync))]
+        public async Task<ActivityDetailModel> GetUserActiveActivityAsync(Guid userId)
+        {
+            var activeActivity = await _activityFacade.GetActiveUserActivityAsync(userId);
+            if (activeActivity == null)
             {
-                var searchedUser = await _userFacade.GetByIdAsync(userId);
-                if (searchedUser is not null)
-                {
-                    if (searchedUser.Activities.Any())
-                    {
-                        return Ok(await _activityFacade.GetUserActivitiesByFilterAsync(userId, filter));
-                    }
-                    else
-                    {
-                        return NotFound("No activity found.");
-                    }
-                }
-                else
-                {
-                    return NotFound("User not found.");
-                }
+                return new ActivityDetailModel { ActivityType = null };
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return activeActivity;
         }
 
         [HttpDelete("{activityId}", Name = nameof(DeleteActivityAsync))]

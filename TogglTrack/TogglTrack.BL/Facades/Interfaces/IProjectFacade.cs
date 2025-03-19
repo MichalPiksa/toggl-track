@@ -5,5 +5,6 @@ namespace TogglTrack.BL.Facades.Interfaces
     public interface IProjectFacade : IFacade<ProjectListModel, ProjectDetailModel>
     {
         Task<ProjectDetailModel> CreateProjectAsync(string projectName);
+        Task<IEnumerable<ProjectListModel>> GetUserProjectsAsync(Guid userId);
     }
 }

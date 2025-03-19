@@ -8,9 +8,8 @@
 
 @foreach (var user in Users)
 {
-	<p><a href="/users/@user.Id">@($"{user.FirstName} {user.LastName}")</a>
-		<button @onclick="() => SelectUser(user.Id)">Select</button>
-		<button @onclick="() => DeleteUser(user.Id)">Delete</button>
+	<p><a href="/users/@user.Id/projects">@($"{user.FirstName} {user.LastName}")</a>
+		<button @onclick="() => EditUser(user.Id)">Edit</button>
 	</p>
 }
 

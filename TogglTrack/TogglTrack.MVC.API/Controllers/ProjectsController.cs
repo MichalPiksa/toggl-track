@@ -10,54 +10,62 @@ namespace TogglTrack.MVC.API.Controllers
     [Route("[controller]")]
     public class ProjectsController : ControllerBase
     {
-        private readonly IProjectFacade facade;
-        private readonly BusinessService businessService;
+        private readonly IProjectFacade _projectFacade;
+        private readonly IUserFacade _userFacade;
+        private readonly BusinessService _businessService;
 
-        public ProjectsController(IProjectFacade facade, BusinessService businessService)
+        public ProjectsController(IProjectFacade projectFacade, IUserFacade userFacade, BusinessService businessService)
         {
-            this.facade = facade;
-            this.businessService = businessService;
+            _projectFacade = projectFacade;
+            _userFacade = userFacade;
+            _businessService = businessService;
         }
         [HttpPost("create", Name = nameof(CreateProjectAsync))]
         public async Task<ProjectDetailModel> CreateProjectAsync(CreateProjectRequest request)
         {
-            return await facade.CreateProjectAsync(request.ProjectName);
+            return await _projectFacade.CreateProjectAsync(request.Name);
         }
 
-        [HttpPost("addusertoproject", Name = nameof(AddUserToProjectAsync))]
+        [HttpPost("add-user-to-project", Name = nameof(AddUserToProjectAsync))]
         public async Task AddUserToProjectAsync(AddUserToProjectRequest request)
         {
-            await businessService.AddUserToProjectAsync(request.UserId, request.ProjectId);
+            await _businessService.AddUserToProjectAsync(request.UserId, request.ProjectId);
         }
 
         [HttpGet(Name = nameof(GetProjectsAsync))]
         public IEnumerable<ProjectListModel> GetProjectsAsync()
         {
-            return facade.GetAll();
+            return _projectFacade.GetAll();
         }
 
         [HttpGet("{projectId}", Name = nameof(GetProjectByIdAsync))]
         public async Task<ProjectDetailModel?> GetProjectByIdAsync(Guid projectId)
         {
-            return await facade.GetByIdAsync(projectId);
+            return await _projectFacade.GetByIdAsync(projectId);
+        }
+
+        [HttpGet("{userId}/user-projects", Name = nameof(GetUserProjectsAsync))]
+        public async Task<IEnumerable<ProjectListModel>> GetUserProjectsAsync(Guid userId)
+        {
+            return await _projectFacade.GetUserProjectsAsync(userId);
         }
 
         [HttpPut("{projectId}", Name = nameof(UpdateOrCreateProjectAsync))]
-        public async Task<IActionResult> UpdateOrCreateProjectAsync(Guid ProjectId, CreateProjectRequest request)
+        public async Task<IActionResult> UpdateOrCreateProjectAsync(Guid projectId, CreateProjectRequest request)
         {
             var updatedProject = new ProjectDetailModel() 
             {
-                Id = ProjectId,
-                Name = request.ProjectName
+                Id = projectId,
+                Name = request.Name
             };
-            await facade.SaveAsync(updatedProject);
+            await _projectFacade.SaveAsync(updatedProject);
             return Ok(updatedProject);
         }
 
         [HttpDelete("{projectId}", Name = nameof(DeleteProjectAsync))]
         public async Task DeleteProjectAsync(Guid projectId)
         {
-            await facade.DeleteAsync(projectId);
+            await _projectFacade.DeleteAsync(projectId);
         }
     }
 }

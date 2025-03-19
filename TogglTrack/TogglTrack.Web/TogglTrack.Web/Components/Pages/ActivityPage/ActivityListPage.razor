@@ -1,9 +1,125 @@
-﻿@page "/users/{userId:guid}/projects/{projectId:guid}/activities"
+﻿@page "/users/{UserId:guid}/activities"
 
 @rendermode InteractiveServer
 
-<h3>ActivityListPage</h3>
+<h3>User profile</h3>
 
-@code {
-
+@if (UserProfile != null && !string.IsNullOrWhiteSpace(UserProfile.PhotoUrl))
+{
+	<img img src="@UserProfile.PhotoUrl" alt="User profile photo" style="max-width: 150px; max-height: 150px;" />
 }
+else
+{
+	<p>No photo available.</p>
+}
+
+<p>
+    @($"{UserProfile.FirstName} {UserProfile.LastName}")
+</p>
+
+@if (InProgressActivity.ActivityType != null && InProgressActivity.Project != null && InProgressActivity.User != null)
+{
+    <p>
+       <span>Active project: @InProgressActivity.Project.Name</span>
+	</p>
+    <p>
+        <span>Active activity: @InProgressActivity.ActivityType</span>
+    </p>
+}
+else
+{
+    <p>No active project and activity</p>
+}
+
+<h3>Filter your activities</h3>
+
+<button @onclick="ShowAllActivities">All activities</button>
+<button @onclick="ShowLastWeekActivities">Last week</button>
+<button @onclick="ShowLastMonthActivities">Last month</button>
+<button @onclick="ShowLastYearActivities">Last year</button>
+
+@if (showAllActivities)
+{
+	if (AllUserActivities.Count == 0)
+	{
+		<p>No activities</p>
+	}
+	else
+    {
+        @foreach (var activity in AllUserActivities)
+        {
+            <p>
+                Activity type: @(activity.ActivityType)
+                <button @onclick="() => ActivityDetail(activity.Id)">Detail</button>
+            </p>
+        }
+    }
+}
+
+@if (showLastWeekActivities)
+{
+    if (LastWeekUserActivities.Count == 0)
+    {
+        <p>No activities</p>
+    }
+    else
+    {
+        @foreach (var activity in LastWeekUserActivities)
+        {
+            <p>
+                Activity type: @(activity.ActivityType)
+                <button @onclick="() => ActivityDetail(activity.Id)">Detail</button>
+            </p>
+        }
+    }
+}
+
+@if (showLastMonthActivities)
+{
+    if (LastMonthUserActivities.Count == 0)
+    {
+        <p>No activities</p>
+    }
+    else
+    {
+        @foreach (var activity in LastMonthUserActivities)
+        {
+            <p>
+                Activity type: @(activity.ActivityType)
+                <button @onclick="() => ActivityDetail(activity.Id)">Detail</button>
+            </p>
+        }
+    }
+}
+
+@if (showLastYearActivities)
+{
+    if (LastYearUserActivities.Count == 0)
+    {
+        <p>No activities</p>
+    }
+    else
+    {
+        @foreach (var activity in LastYearUserActivities)
+        {
+            <p>
+                Activity type: @(activity.ActivityType)
+                <button @onclick="() => ActivityDetail(activity.Id)">Detail</button>
+            </p>
+        }
+    }
+}
+
+@if (selectedActivity != null)
+{
+    <h3>Activity Details</h3>
+    <p>Project: @selectedActivity.Project?.Name</p>
+    <p>Activity Type: @selectedActivity.ActivityType</p>
+    <p>Description: @selectedActivity.Description</p>
+    <p>Start Time: @selectedActivity.StartTime</p>
+    <p>End Time: @selectedActivity.EndTime</p>
+}
+
+<p>
+    <button @onclick="@Cancel">Go back</button>
+</p>

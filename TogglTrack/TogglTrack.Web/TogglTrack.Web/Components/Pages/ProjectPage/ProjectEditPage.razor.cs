@@ -33,8 +33,13 @@ namespace TogglTrack.Web.Components.Pages.ProjectPage
 
         protected override async Task OnInitializedAsync()
         {
-            Data = await ProjectsClient.GetProjectByIdAsync(projectId.Value);
-            //Data = mapper.Map<UserDetailModel>(user);
+            //Data = await ProjectsClient.GetProjectByIdAsync(projectId.Value);
+
+            if (projectId.HasValue)
+            {
+                var project = await ProjectsClient.GetProjectByIdAsync(projectId.Value);
+                Data = mapper.Map<ProjectDetailModel>(project);
+            }
         }
 
         public async void SaveProject()

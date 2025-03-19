@@ -1,6 +1,7 @@
-
-using System.Text.Json.Serialization;
-using System.Text.Json;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using TogglTrack.API.Abstractions;
+using TogglTrack.API.Abstractions.Validations;
 using TogglTrack.BL;
 using TogglTrack.DAL;
 
@@ -18,6 +19,9 @@ namespace TogglTrack.MVC.API
             
             builder.Services.AddSwaggerGen();
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddScoped<IValidator<CreateUserRequest>, CreateUserValidator>();
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {

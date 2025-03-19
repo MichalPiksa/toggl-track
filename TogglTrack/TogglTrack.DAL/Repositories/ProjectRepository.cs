@@ -16,7 +16,9 @@ namespace TogglTrack.DAL.Repositories
         }
         public override IQueryable<ProjectEntity> GetAll()
         {
-            return togglTrackDbContext.Projects.Include(x => x.Users);
+            return togglTrackDbContext.Projects
+                .Include(x => x.Users)
+                .Include(y => y.Activities);
         }
     }
 }

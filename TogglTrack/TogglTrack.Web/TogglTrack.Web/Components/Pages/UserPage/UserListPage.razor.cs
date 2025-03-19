@@ -28,23 +28,17 @@ namespace TogglTrack.Web.Components.Pages.UserPage
         public async Task AddUser()
         {
             var newUser = new CreateUserRequest(
-                FirstName: "Enter name",
-                LastName: "Enter surname",
-                PhotoUrl: "Enter photo url"
+                FirstName: "EnterName",
+                LastName: "EnterSurname",
+                PhotoUrl: "https://cdn.vectorstock.com/i/500p/17/61/male-avatar-profile-picture-vector-10211761.jpg"
             );
             var createdUser = await UsersClient.CreateUserAsync(newUser);
-            NavigationManager.NavigateTo($"/users/{createdUser.Id}");
+            NavigationManager.NavigateTo($"/users/{createdUser.Id}/edit");
         }
 
-        public void SelectUser(Guid id)
+        public void EditUser(Guid id)
         {
-            NavigationManager.NavigateTo($"/users/{id}/projects");
-        }
-
-        public async Task DeleteUser(Guid id)
-        {
-            await UsersClient.DeleteUserAsync(id);
-            Users = await UsersClient.GetUsersAsync();
+            NavigationManager.NavigateTo($"/users/{id}/edit");
         }
     }
 }

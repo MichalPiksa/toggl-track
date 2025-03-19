@@ -1,27 +1,49 @@
 ﻿@using TogglTrack.Common.Models.User
-@page "/users/{Id:guid}"
+@using FluentValidation
+@using FluentValidation.AspNetCore
+@page "/users/{Id:guid}/edit"
 
 <h3>User Edit Page</h3>
 
 @rendermode InteractiveServer
 
-<p>
-	<label>
-		First name:
-		<InputText @bind-Value="Data.FirstName" />
-	</label>
-</p>
-<p>
-	<label>
-		Last name:
-		<InputText @bind-Value="Data.LastName" />
-	</label>
-</p>
-<p>
-	<button @onclick="@Save">Save</button>
-	<button @onclick="() => DeleteUser(Data.Id)">Delete user</button>
-	<button @onclick="@Cancel">Cancel</button>
-</p>
+<EditForm Model="@Data" OnValidSubmit="@Save" OnInvalidSubmit="@HandleInvalidSubmit">
+    <DataAnnotationsValidator />
+    <FluentValidationValidator Validator="@_createUserValidator" />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            First name:
+            <InputText @bind-Value="Data.FirstName" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Last name:
+            <InputText @bind-Value="Data.LastName" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Photo Url:
+            <InputText @bind-Value="Data.PhotoUrl" />
+        </label>
+    </p>
+    <p>
+        <button type="submit">Save</button>
+        <button type="button" @onclick="() => DeleteUser(Data.Id)">Delete user</button>
+        <button type="button" @onclick="@Cancel">Cancel</button>
+    </p>
+</EditForm>
+
+@if (!string.IsNullOrWhiteSpace(@Data.PhotoUrl))
+{
+	<p>
+		<img img src="@Data.PhotoUrl" alt="User profile photo" style="max-width: 150px; max-height: 150px;" />
+	</p>
+}
+
 <p>
 	Full name: @($"{Data.FirstName} {Data.LastName}")
 </p>

@@ -20,7 +20,7 @@ namespace TogglTrack.DAL
 
             var optionsBuilder = new DbContextOptionsBuilder<TogglTrackDbContext>();
 
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("ToggleTrack"));
+            optionsBuilder.UseSqlite(configuration.GetConnectionString("TogglTrackConnection"));
 
             return new TogglTrackDbContext(optionsBuilder.Options);
         }

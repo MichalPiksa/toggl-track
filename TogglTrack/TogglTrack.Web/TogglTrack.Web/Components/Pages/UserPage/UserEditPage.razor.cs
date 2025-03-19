@@ -3,6 +3,7 @@ using TogglTrack.API.Abstractions;
 using TogglTrack.Blazor;
 using TogglTrack.Common.Models.User;
 using AutoMapper;
+using FluentValidation;
 
 namespace TogglTrack.Web.Components.Pages.UserPage
 {
@@ -18,6 +19,8 @@ namespace TogglTrack.Web.Components.Pages.UserPage
         public IUsersClient UsersClient { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
+        [Inject]
+        public IValidator<CreateUserRequest> _createUserValidator { get; set; }
         [Parameter]
         public Guid? Id { get; set; }
 
@@ -51,6 +54,11 @@ namespace TogglTrack.Web.Components.Pages.UserPage
         {
             await UsersClient.DeleteUserAsync(id);
             NavigationManager.NavigateTo("/users");
+        }
+
+        public void HandleInvalidSubmit()
+        {
+            var errorMessage = "Validation error.";
         }
     }
 }

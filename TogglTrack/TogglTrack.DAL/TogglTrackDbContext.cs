@@ -33,6 +33,37 @@ namespace TogglTrack.DAL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.LogTo(result => System.Diagnostics.Trace.WriteLine(result), Microsoft.Extensions.Logging.LogLevel.Information);
+            optionsBuilder.EnableSensitiveDataLogging();
+
+            optionsBuilder.UseSeeding((context, services) =>
+            {
+                var user1 = context.Set<UserEntity>().FirstOrDefault(u => u.FirstName == "Carlos" && u.LastName == "Wilkinson");
+                var user2 = context.Set<UserEntity>().FirstOrDefault(u => u.FirstName == "Liam" && u.LastName == "Henderson");
+                if (user1 == null)
+                {
+                    context.Set<UserEntity>().Add(new UserEntity
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "Carlos",
+                        LastName = "Wilkinson",
+                        PhotoUrl = "https://cdn.vectorstock.com/i/500p/17/61/male-avatar-profile-picture-vector-10211761.jpg",
+                    });
+                    context.SaveChanges();
+                }
+                if (user2 != null)
+                {
+                    context.Set<UserEntity>().Add(new UserEntity
+                    {
+                        Id = Guid.NewGuid(),
+                        FirstName = "Liam",
+                        LastName = "Henderson",
+                        PhotoUrl = "https://cdn.vectorstock.com/i/500p/17/61/male-avatar-profile-picture-vector-10211761.jpg"
+                    });
+                    context.SaveChanges();
+                }
+            });
         }
     }
 }

@@ -1,0 +1,39 @@
+﻿@page "/users/{userId:guid}/projects/{projectId:guid}/activity-detail"
+
+@rendermode InteractiveServer
+
+<h3>User profile</h3>
+
+@if (UserProfile != null && !string.IsNullOrWhiteSpace(UserProfile.PhotoUrl))
+{
+	<img img src="@UserProfile.PhotoUrl" alt="User profile photo" style="max-width: 150px; max-height: 150px;" />
+}
+else
+{
+	<p>No photo available.</p>
+}
+
+<p>
+    @($"{UserProfile.FirstName} {UserProfile.LastName}")
+</p>
+
+<h3>Activity Detail Page</h3>
+
+<p>
+	<label>
+		Activity Type:
+		<InputText @bind-Value="ActivityData.ActivityType" />
+	</label>
+</p>
+<p>
+	<label>
+		Description:
+		<InputText @bind-Value="ActivityData.Description" />
+	</label>
+</p>
+
+<p>
+    <button @onclick="() => StartActivity()">Start activity and save</button>
+	@* <button @onclick="() => StopActivity()">Stop activity</button> *@
+    <button @onclick="@Cancel">Go back</button>
+</p>

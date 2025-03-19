@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TogglTrack.BL.Facades.Interfaces;
 using TogglTrack.BL.Services;
 using TogglTrack.Common.Models.Activity;
+using TogglTrack.Common.Models.Project;
 using TogglTrack.DAL;
 using TogglTrack.DAL.Repositories;
 
@@ -33,7 +34,7 @@ namespace TogglTrack.BL.Facades
                 throw new ArgumentException("Project does not exist", nameof(projectId));
             }
             var project = await _projectRepository.GetByIdAsync(projectId);
-            if (!project.Users.Any(x => x.Id == userId)) 
+            if (!project.Users.Any(x => x.Id == userId))
             {
                 await _businessService.AddUserToProjectAsync(userId, projectId);
             }
@@ -71,7 +72,7 @@ namespace TogglTrack.BL.Facades
                 throw new ArgumentException($"User with id {userId} does not exist", nameof(userId));
             }
             if (filter == "lastWeek")
-            { 
+            {
                 var lastWeekActivities = await repository.GetAll()
                     .Where(activity => activity.UserId == userId && activity.StartTime >= DateTime.Now.AddDays(-7))
                     .OrderBy(activity => activity.StartTime)
@@ -99,6 +100,14 @@ namespace TogglTrack.BL.Facades
                 .OrderBy(activity => activity.StartTime)
                 .ToListAsync();
             return mapper.Map<IEnumerable<ActivityListModel>>(allUserActivities);
+        }
+
+        public async Task<ActivityDetailModel?> GetActiveUserActivityAsync(Guid userId)
+        {
+            var activeActivity = await repository.GetAll()
+                .Where(a => a.UserId == userId && a.EndTime == null)
+                .FirstOrDefaultAsync();
+            return activeActivity is null ? null : mapper.Map<ActivityDetailModel>(activeActivity);
         }
     }
 }

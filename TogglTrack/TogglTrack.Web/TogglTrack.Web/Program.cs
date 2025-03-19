@@ -1,3 +1,6 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using TogglTrack.API.Abstractions.Validations;
 using TogglTrack.Blazor;
 using TogglTrack.Web.Components;
 using TogglTrack.Web.MapperProfiles;
@@ -16,6 +19,9 @@ namespace TogglTrack.Web
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
             builder.Services.AddHttpClient();
             builder.Services.AddScoped(serviceProvider =>
             {
@@ -25,6 +31,7 @@ namespace TogglTrack.Web
             });
 
             builder.Services.AddAutoMapper(typeof(UserMapperWebProfile));
+            builder.Services.AddAutoMapper(typeof(ProjectMapperWebProfile));
 
             builder.Services.AddTransient<IUsersClient, UsersClient>();
             builder.Services.AddTransient<IProjectsClient, ProjectsClient>();

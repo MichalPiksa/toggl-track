@@ -5,7 +5,7 @@
 namespace TogglTrack.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Changedtherelationshipbetweenentities : Migration
+    public partial class DataSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

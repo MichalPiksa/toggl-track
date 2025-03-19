@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TogglTrack.API.Abstractions;
 using TogglTrack.BL.Facades.Interfaces;
-using TogglTrack.Common.Models.Activity;
-using TogglTrack.Common.Models.Project;
 using TogglTrack.Common.Models.User;
 
 namespace TogglTrack.MVC.API.Controllers
@@ -28,34 +26,6 @@ namespace TogglTrack.MVC.API.Controllers
         public async Task<UserDetailModel?> GetUserAsync(Guid userId)
         {
             return await _userFacade.GetByIdAsync(userId);
-        }
-
-        [HttpGet("{userId}/projects", Name = nameof(GetUserProjectsAsync))]
-        public async Task<ActionResult<IEnumerable<ProjectListModel>>> GetUserProjectsAsync(Guid userId)
-        {
-            try
-            {
-                var searchedUser = await _userFacade.GetByIdAsync(userId);
-                if (searchedUser is not null)
-                {
-                    if (searchedUser.Projects.Any())
-                    {
-                        return Ok(searchedUser.Projects);
-                    }
-                    else
-                    {
-                        return NotFound("No project found.");
-                    }
-                }
-                else
-                {
-                    return NotFound("User not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [HttpPost("create", Name = nameof(CreateUserAsync))]
